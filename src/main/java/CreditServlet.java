@@ -1,15 +1,7 @@
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,23 +68,23 @@ public class CreditServlet extends HttpServlet {
     }
 
     // metoda sprawdzajaca czy pola w formularzu sa wypelnione
-    public void basicValidation(String request, HttpServletResponse response) throws IOException{
+    private void basicValidation(String request, HttpServletResponse response) throws IOException{
         if (request == null || request.equals("")) {
             response.sendRedirect("/");
         }
     }
 
     // metoda obliczajaca rate stala
-    public void calculateInstalmentFixed(String amountClaimed, String instalmentAmount, String creditRate, String standingCharge) {
+    private void calculateInstalmentFixed(String amountClaimed, String instalmentAmount, String creditRate, String standingCharge) {
 
         int totalAmountOfInstalments = Integer.parseInt(instalmentAmount);
         double charge = Double.parseDouble(standingCharge);
         double rateOfCredit = Double.parseDouble(creditRate) / 100;
         double claimedAmount = Double.parseDouble(amountClaimed);
         double cashToPay = claimedAmount;
-        double interest = 0;
-        double capital = 0;
-        double instalmentAfterCharge = 0;
+        double interest;
+        double capital;
+        double instalmentAfterCharge;
 
         int amountOfInstalmentsPerYear = calculateAmountOfInstalmentsPerYear(instalmentAmount);
 
@@ -114,17 +106,17 @@ public class CreditServlet extends HttpServlet {
     }
 
     // metoda obliczajaca rate malejaca
-    public void calculateInstalmentDecreasing(String amountClaimed, String instalmentAmount, String creditRate, String standingCharge) {
+    private void calculateInstalmentDecreasing(String amountClaimed, String instalmentAmount, String creditRate, String standingCharge) {
 
         int totalAmountOfInstalments = Integer.parseInt(instalmentAmount);
         double charge = Double.parseDouble(standingCharge);
         double rateOfCredit = Double.parseDouble(creditRate) / 100;
         double claimedAmount = Double.parseDouble(amountClaimed);
         double cashToPay = claimedAmount;
-        double interest = 0;
-        double capital = 0;
-        double instalment = 0;
-        double instalmentAfterCharge = 0;
+        double interest;
+        double capital;
+        double instalment;
+        double instalmentAfterCharge;
 
         int amountOfInstalmentsPerYear = calculateAmountOfInstalmentsPerYear(instalmentAmount);
 
@@ -144,8 +136,8 @@ public class CreditServlet extends HttpServlet {
     }
 
     // metoda obliczajaca ilosc rat w roku na wypadek splat raty kredytu w okresie innym niz miesieczny
-    public int calculateAmountOfInstalmentsPerYear(String instalmentAmount) {
-        int instalmentAmountPerYear = 12;
+    private int calculateAmountOfInstalmentsPerYear(String instalmentAmount) {
+        int instalmentAmountPerYear;
 
         if (Integer.parseInt(instalmentAmount) < 12) {
             instalmentAmountPerYear = Integer.parseInt(instalmentAmount);
@@ -157,28 +149,28 @@ public class CreditServlet extends HttpServlet {
     }
 
     // zapisane kwoty czesci kapitalowej, czesci odsetkowej, oplat stalych i rat calkowitych w oddzielnych listach
-    public List<Double> capitalSchedule(double instalmentCapital) {
+    private List<Double> capitalSchedule(double instalmentCapital) {
         capital.add(instalmentCapital);
         return capital;
     }
 
-    public List<Double> interestSchedule(double interestCapital) {
+    private List<Double> interestSchedule(double interestCapital) {
         interest.add(interestCapital);
         return interest;
     }
 
-    public List<Double> standingChargeSchedule(double standingCharge) {
+    private List<Double> standingChargeSchedule(double standingCharge) {
         charge.add(standingCharge);
         return charge;
     }
 
-    public List<Double> instalmentPlusCharge(double instalmentAfterCharge) {
+    private List<Double> instalmentPlusCharge(double instalmentAfterCharge) {
         totalInstalment.add(instalmentAfterCharge);
         return totalInstalment;
     }
 
     // wyswietlenie harmonogramu
-    public void displaySchedule(String instalmentAmount, HttpServletResponse response) throws IOException {
+    private void displaySchedule(String instalmentAmount, HttpServletResponse response) throws IOException {
 
         int amountOfInstalments = Integer.parseInt(instalmentAmount);
         int counter = 1;
