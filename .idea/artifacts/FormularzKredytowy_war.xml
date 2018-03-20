@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="FormularzKredytowy:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="FormularzKredytowy-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="FormularzKredytowy:war exploded" />
+    </root>
+  </artifact>
+</component>
